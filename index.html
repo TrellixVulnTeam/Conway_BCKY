@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang=en>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Conway Game of Life</title>
+</head>
+
+<body>
+
+    <script>
+        const body = document.querySelector("body")
+        let board = document.createElement("div");
+        board.className = "board";
+        for (let i = 0; i < 25; i++) {
+            let row = document.createElement("div");
+            row.class = "row";
+            for (let i = 0; i < 25; i++) {
+                let cell = document.createElement("div");
+                cell.className = "cell";
+                cell.style.border = 1;
+                cell.style.borderColor = black;
+                /*              let button = document.createElement("button");
+                                button.className = "button";
+                                button.style.background = "gray";
+                                button.style.height= 10;
+                                button.style.width=10;
+                                button.boder = 1;
+                                cell.appendChild(button);
+                                row.appendChild(cell); */
+            }
+            row.style.display = "flex";
+            row.style.flexDirection = "row";
+            board.appendChild(row);
+        }
+        body.appendChild(board);
+
+        let buttons = document.querySelectorAll(".button");
+        buttons.forEach(function (button, index) {
+            button.addEventListener('click', function (button) {
+                button.style.background = "red";
+            })
+        })
+
+    </script>
+
+</body>
+
+</html>
