@@ -1,0 +1,21 @@
+#board {
+  background: floralwhite;
+  width: 60%; }
+
+.cell {
+  width: 100%;
+  background: gray;
+  border-radius: 50%; }
+
+.cell:after {
+  content: "";
+  display: block;
+  padding-bottom: 100%; }
+
+.btn-group {
+  margin: 5px;
+  padding-bottom: 10px; }
+
+.dropdown {
+  margin: 5px;
+  padding-bottom: 10px; }

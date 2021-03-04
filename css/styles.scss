@@ -1,0 +1,33 @@
+$board-bg: floralwhite;
+
+@mixin button-margin {
+    margin: 5px;
+    padding-bottom: 10px;
+}
+
+#board {
+    background: $board-bg;
+    width: 60%;
+}
+
+.cell {
+    width: 100%;
+    background: gray;
+    border-radius: 50%;
+}
+
+.cell:after {
+    content: "";
+    display: block;
+    padding-bottom: 100%;
+}
+
+.btn-group {
+    @include button-margin;
+}
+
+.dropdown {
+    @include button-margin;
+}
+
+
