@@ -36,10 +36,10 @@
                     Reset Board
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <a class="dropdown-item" href="#" id="board1">12*12</a>
-                    <a class="dropdown-item" href="#" id="board2">24*24</a>
-                    <a class="dropdown-item" href="#" id="board3">36*36</a>
-                    <a class="dropdown-item" href="#" id="board4">48*48</a>
+                    <a class="dropdown-item" href="#" id="board1"><span style="font-size:20px">12*12</span></a>
+                    <a class="dropdown-item" href="#" id="board2"><span style="font-size:25px">24*24</span></a>
+                    <a class="dropdown-item" href="#" id="board3"><span style="font-size:30px">36*36</span></a>
+                    <a class="dropdown-item" href="#" id="board4"><span style="font-size:35px">48*48</span></a>
                 </div>
             </div>
         </div>
@@ -51,6 +51,8 @@
     <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
     <script>
         $(document).ready(function () {
+            const activeCells = [];
+
             function drawBoard(size) {
                 let boardContainer = document.createElement("div")
                 boardContainer.classList.add("container")
@@ -58,59 +60,81 @@
                 for (let i = 0; i < size; i++) {
                     let boardUnit = document.createElement("div")
                     boardUnit.classList.add("row")
-                    boardUnit = drawBoardUnit(boardUnit, size)
+                    boardUnit = drawBoardUnit(boardUnit, size, i)
                     boardContainer.append(boardUnit)
                 }
                 $("#board").append(boardContainer)
                 addCellListener();
             }
 
-            function drawBoardUnit(boardUnit, boardSize) {
+            /* A boardUnit contains a row of cellContainers. */
+            function drawBoardUnit(boardUnit, boardSize, boardUnitIndex) {
+
                 let newBoardUnit = boardUnit
                 for (let i = 0; i < boardSize; i++) {
                     let cellContainer = document.createElement("div")
                     cellContainer.classList.add("container")
                     cellContainer.classList.add(`col-${12 / Number(boardSize)}`)
-                    cellContainer = drawCellContainer(cellContainer)
-                    boardUnit.append(cellContainer)
+                    cellContainer = drawCellContainer(boardUnitIndex, i, cellContainer)
+                    newBoardUnit.append(cellContainer)
                 }
                 return newBoardUnit
             }
 
-            function drawCellContainer(cellContainer) {
+            /* A cellContainer contains 12 rows of cells. */
+            function drawCellContainer(BoardUnitIndex, cellContainerIndex, cellContainer) {
                 let newCellContainer = cellContainer
                 for (let i = 0; i < 12; i++) {
                     let cellRow = document.createElement("div")
                     cellRow.classList.add("row")
-                    cellRow = drawCellRow(cellRow)
+                    cellRow = drawCellRow(BoardUnitIndex, cellContainerIndex, i, cellRow)
                     newCellContainer.append(cellRow)
                 }
                 return newCellContainer
             }
 
-            function drawCellRow(cellRow) {
+            /* A cellRow contains 12 cells. */
+            function drawCellRow(BoardUnitIndex, cellContainerIndex, cellRowIndex, cellRow) {
                 let newCellRow = cellRow
                 for (let i = 0; i < 12; i++) {
                     let cell = document.createElement("div")
                     cell.classList.add("cell")
                     cell.classList.add("col-1")
                     cell.classList.add("p-0")
+                    cell = getCellCoord(BoardUnitIndex, cellContainerIndex, cellRowIndex, i, cell)
                     newCellRow.append(cell)
                 }
                 return newCellRow
+            }
+
+            function getCellCoord(boardUnitIndex, cellContainerIndex, cellRowIndex, cellIndex, cell) {
+                let newCell = cell
+                let cellCoordX = 12 * cellContainerIndex + cellIndex;
+                let cellCoordY = 12 * boardUnitIndex + cellRowIndex;
+                newCell.setAttribute("coordX", cellCoordX)
+                newCell.setAttribute("coordY", cellCoordY)
+                return newCell
+
             }
 
             function addCellListener() {
                 $(".cell").click(function () {
                     if ($(this).css("background-color") == "rgb(128, 128, 128)") {
                         $(this).css("background-color", "pink")
+                        addToActiveCells(this)
                     } else {
                         $(this).css("background-color", "gray")
                     }
                 })
             }
 
-            drawBoard(1)
+            function addToActiveCells(cell) {
+                cellCoordX = cell.getAttribute("coordX")
+                cellCoordY = cell.getAttribute("coordY")
+                activeCells.push([cellCoordX, cellCoordY])
+                console.log(activeCells)
+
+            }
 
             $("#board1").click(function () {
                 $("#board").empty()
@@ -132,7 +156,7 @@
                 drawBoard(4)
             })
 
-
+            drawBoard(1)
         })
     </script>
 
