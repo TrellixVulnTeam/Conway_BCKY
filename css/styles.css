@@ -1,11 +1,12 @@
 #board {
-  background: floralwhite;
-  width: 60%; }
+  background-color: #cfccc4;
+  width: 60%;
+  padding: 10px; }
 
 .cell {
   width: 100%;
-  background: gray;
-  border-radius: 50%; }
+  background-color: gray;
+  border-radius: 20%; }
 
 .cell:after {
   content: "";
