@@ -23,12 +23,12 @@
     <div class="container">
         <div class="row row-content">
             <div class="btn-group" role="group">
-                <button class="btn btn-primary">Run</button>
-                <button class="btn btn-danger">Stop</button>
+                <button class="btn btn-primary" id="run">Run</button>
+                <button class="btn btn-danger" id="stop">Stop</button>
             </div>
             <div class="btn-group mb-auto" role="group">
-                <button class="btn btn-warning">Beautiful</button>
-                <button class="btn btn-success">Random</button>
+                <button class="btn btn-warning" id="beaty">Beautiful</button>
+                <button class="btn btn-success" id="random">Random</button>
             </div>
             <div class="dropdown">
                 <button class="btn btn-info dropdown-toggle" type="button" id="sizeButton" data-toggle="dropdown"
@@ -51,8 +51,8 @@
     <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
     <script>
         $(document).ready(function () {
-            const activeCells = [];
-
+            let boardSize = 1;
+            let timerReference = undefined
             function drawBoard(size) {
                 let boardContainer = document.createElement("div")
                 boardContainer.classList.add("container")
@@ -101,6 +101,7 @@
                     cell.classList.add("cell")
                     cell.classList.add("col-1")
                     cell.classList.add("p-0")
+                    cell.classList.add("dead")
                     cell = getCellCoord(BoardUnitIndex, cellContainerIndex, cellRowIndex, i, cell)
                     newCellRow.append(cell)
                 }
@@ -111,49 +112,102 @@
                 let newCell = cell
                 let cellCoordX = 12 * cellContainerIndex + cellIndex;
                 let cellCoordY = 12 * boardUnitIndex + cellRowIndex;
-                newCell.setAttribute("coordX", cellCoordX)
-                newCell.setAttribute("coordY", cellCoordY)
+                newCell.setAttribute("coordx", cellCoordX)
+                newCell.setAttribute("coordy", cellCoordY)
                 return newCell
 
             }
 
             function addCellListener() {
                 $(".cell").click(function () {
-                    if ($(this).css("background-color") == "rgb(128, 128, 128)") {
+                    if ($(this).hasClass("dead")) {
+                        $(this).removeClass("dead")
+                        $(this).addClass("alive")
                         $(this).css("background-color", "pink")
-                        addToActiveCells(this)
-                    } else {
+                    } else if ($(this).hasClass("alive")) {
+                        $(this).removeClass("alive")
+                        $(this).addClass("dead")
                         $(this).css("background-color", "gray")
                     }
                 })
             }
 
-            function addToActiveCells(cell) {
-                cellCoordX = cell.getAttribute("coordX")
-                cellCoordY = cell.getAttribute("coordY")
-                activeCells.push([cellCoordX, cellCoordY])
-                console.log(activeCells)
-
-            }
-
             $("#board1").click(function () {
                 $("#board").empty()
                 drawBoard(1)
+                boardSize = 1
             })
 
             $("#board2").click(function () {
                 $("#board").empty()
                 drawBoard(2)
+                boardSize = 2
             })
 
             $("#board3").click(function () {
                 $("#board").empty()
                 drawBoard(3)
+                boardSize = 3
             })
 
             $("#board4").click(function () {
                 $("#board").empty()
                 drawBoard(4)
+                boardSize = 4
+            })
+
+            $("#run").click(() => {
+                if (timerReference === undefined) {
+                    timerReference = setInterval(run, 5000)
+                }
+            })
+
+            function run() {
+                let cells = document.querySelectorAll(".cell")
+                cells.forEach(checkNeighbors)
+                cells.forEach(stateColor)
+            }
+
+            function checkNeighbors(cell, index) {
+                let aliveNeighborNum = 0;
+                let x = Number(cell.getAttribute("coordx"))
+                let y = Number(cell.getAttribute("coordy"))
+
+                for (i = Math.max(x - 1, 0); i < Math.min(x + 2, boardSize * 12); i++) {
+                    for (j = Math.max(y - 1, 0); j < Math.min(y + 2, boardSize * 12); j++) {
+                        console.log(i)
+                        console.log(j)
+                        console.log(document.querySelector('[coordx="i"][coordy="j"]').classList)
+                        if (document.querySelector('[coordx="i"][coordy="j"]').classList.contains("alive")
+                            && i != x && j != y) {
+                            aliveNeighborNum++
+                            if (x == 0 && y == 0) {
+                                console.log(`alive neighbors: ${aliveNeighborNum}`)
+                            }
+                        }
+                    }
+                }
+
+                if ((aliveNeighborNum == 2 || aliveNeighborNum == 3) && cell.classList.contains("dead")) {
+                    cell.classList.remove("dead")
+                    cell.classList.add("alive")
+                } else if ((aliveNeighborNum != 2 && aliveNeighborNum != 3) && cell.classList.contains("alive")) {
+                    cell.classList.remove("alive")
+                    cell.classList.add("dead")
+                }
+            }
+
+            function stateColor(cell, index) {
+                if (cell.classList.contains("dead")) {
+                    cell.style.backgroundColor = "gray"
+                } else if (cell.classList.contains("alive")) {
+                    cell.style.backgroundColor = "pink"
+                }
+            }
+
+            $("#stop").click(() => {
+                clearInterval(timerReference)
+                timerReference = undefined
             })
 
             drawBoard(1)
