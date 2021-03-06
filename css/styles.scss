@@ -6,7 +6,7 @@ $board-bg: rgb(207, 204, 196);
 }
 
 .jumbotron {
-    background: black;
+    background: pink;
     color: white;
 }
 
@@ -25,13 +25,38 @@ $board-bg: rgb(207, 204, 196);
     padding: 1px;
 }
 
-.alive {
-    background: black;
+.alive.style4 {
+    background: pink;
 }
 
-.dead {
-    background: white;
+.dead.style4 {
+    background: gray;
 }
+
+.alive.style3 {
+    background: #582704;
+}
+
+.dead.style3 {
+    background: indigo;
+}
+
+.alive.style2 {
+    background: rgb(224, 130, 6);
+}
+
+.dead.style2 {
+    background: tan;
+}
+
+.alive.style1 {
+    background: olive;
+}
+
+.dead.style1 {
+    background: #92ddc4;
+}
+
 .cell:after {
     content: "";
     display: block;
@@ -44,4 +69,55 @@ $board-bg: rgb(207, 204, 196);
 
 .dropdown {
     @include button-margin;
+}
+
+footer {
+    background: pink;
+    color: white;
+    margin-top: 20px;
+    padding: 10px;
+}
+
+#stop {
+    display: none;
+}
+
+#olive {
+    background: olive;
+    color: white;
+}
+
+#mint {
+    background: rgb(146, 221, 196);
+    color: white;
+}
+
+#camel {
+    background: rgb(224, 130, 6);
+    color: white;
+}
+
+#tan {
+    background: tan;
+    color: white;
+}
+
+#indigo {
+    background: indigo;
+    color: white;
+}
+
+#choco {
+    background: rgb(88, 39, 4);
+    color: white;
+}
+
+#gray {
+    background: gray;
+    color: white;
+}
+
+#pink {
+    background: pink;
+    color: white;
 }

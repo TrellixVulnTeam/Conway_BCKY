@@ -7,6 +7,8 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
 
     <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="node_modules/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="node_modules/bootstrap-social/bootstrap-social.css">
     <link rel="stylesheet" href="./css/styles.css">
 
     <title>Conway's Game of Life</title>
@@ -23,12 +25,14 @@
     <div class="container">
         <div class="row row-content">
             <div class="btn-group" role="group">
-                <button class="btn btn-primary" id="run">Run</button>
-                <button class="btn btn-danger" id="stop">Stop</button>
+                <button class="btn btn-primary" id="run"><span class="fa fa-play"></span></button>
+            </div>
+            <div class="btn-group" role="group">
+                <button class="btn btn-danger" id="stop">Click me to Stop!  <span class="fa fa-pause"></span></button>
             </div>
             <div class="btn-group mb-auto" role="group">
-                <button class="btn btn-warning text-white" id="beauty">Beautiful</button>
-                <button class="btn btn-success" id="random">Random</button>
+                <button class="btn btn-warning text-white" id="beauty">Something Beautiful</button>
+                <button class="btn btn-success" id="random">Something Random</button>
 
             </div>
             <div class="dropdown">
@@ -44,27 +48,83 @@
                 </div>
             </div>
             <div class="dropdown">
-                <button class="btn dropdown-toggle" type="button" id="colorButton" data-toggle="dropdown"
+                <button class="btn btn-info dropdown-toggle" type="button" id="colorButton" data-toggle="dropdown"
                     aria-haspopup="true" aria-expanded="false">
                     Choose Your Color
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <a class="dropdown-item" id="board1"><span style="font-size:20px">12*12</span></a>
-                    <a class="dropdown-item" id="board2"><span style="font-size:25px">24*24</span></a>
-                    <a class="dropdown-item" id="board3"><span style="font-size:30px">36*36</span></a>
-                    <a class="dropdown-item" id="board4"><span style="font-size:35px">48*48</span></a>
+                    <a class="dropdown-item" id="om">
+                        <div class="container color-box" height="10px">
+                            <div class="row">
+                                <div class="col-6 justify-content-center" id="olive">Olive</div>
+                                <div class="col-6 justify-content-center" id="mint">Mint</div>
+                            </div>
+                        </div>
+                    </a>
+                    <a class="dropdown-item" id="ct">
+                        <div class="container color-box" height="10px">
+                            <div class="row">
+                                <div class="col-6 justify-content-center" id="camel">Camel</div>
+                                <div class="col-6 justify-content-center" id="tan">Tan</div>
+                            </div>
+                        </div>
+                    </a>
+                    <a class="dropdown-item" id="ic">
+                        <div class="container color-box" height="10px">
+                            <div class="row">
+                                <div class="col-6 justify-content-center" id="indigo">Indigo</div>
+                                <div class="col-6 justify-content-center" id="choco">Choco</div>
+                            </div>
+                        </div>
+                    </a>
+                    <a class="dropdown-item" id="gp">
+                        <div class="container color-box" height="10px">
+                            <div class="row">
+                                <div class="col-6 justify-content-center" id="gray">Gray</div>
+                                <div class="col-6 justify-content-center" id="pink">Pink</div>
+                            </div>
+                        </div>
+                    </a>
                 </div>
             </div>
         </div>
         <div class="row row-content" id="board"></div>
     </div>
 
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-4">
+                    <h5>Desigend and Created by</h5>
+                    <p>Peter He</p>
+
+                </div>
+
+                <div class="col-6 align-self-center">
+                    <div class="text-center">
+                        <a class="btn btn-social-icon btn-github" href="https://github.com/qhe231"><i
+                                class="fa fa-github"></i></a>
+                        <a class="btn btn-social-icon btn-linkedin" href="https://www.linkedin.com/in/petehe/"><i
+                                class="fa fa-linkedin"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-auto">
+                    <p><small>© Copyright 2021 Peter He</small></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
     <script src="node_modules/jquery/dist/jquery.slim.min.js"></script>
     <script src="node_modules/popper.js/dist/umd/popper.min.js"></script>
     <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="js/scripts.js"></script>
 
-    </div>
+
+
 </body>
+
 
 </html>

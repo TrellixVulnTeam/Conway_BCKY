@@ -1,5 +1,5 @@
 .jumbotron {
-  background: black;
+  background: pink;
   color: white; }
 
 #board {
@@ -14,11 +14,29 @@
   width: 100%;
   padding: 1px; }
 
-.alive {
-  background: black; }
+.alive.style4 {
+  background: pink; }
 
-.dead {
-  background: white; }
+.dead.style4 {
+  background: gray; }
+
+.alive.style3 {
+  background: #582704; }
+
+.dead.style3 {
+  background: indigo; }
+
+.alive.style2 {
+  background: #e08206; }
+
+.dead.style2 {
+  background: tan; }
+
+.alive.style1 {
+  background: olive; }
+
+.dead.style1 {
+  background: #92ddc4; }
 
 .cell:after {
   content: "";
@@ -32,3 +50,44 @@
 .dropdown {
   margin: 5px;
   padding-bottom: 10px; }
+
+footer {
+  background: pink;
+  color: white;
+  margin-top: 20px;
+  padding: 10px; }
+
+#stop {
+  display: none; }
+
+#olive {
+  background: olive;
+  color: white; }
+
+#mint {
+  background: #92ddc4;
+  color: white; }
+
+#camel {
+  background: #e08206;
+  color: white; }
+
+#tan {
+  background: tan;
+  color: white; }
+
+#indigo {
+  background: indigo;
+  color: white; }
+
+#choco {
+  background: #582704;
+  color: white; }
+
+#gray {
+  background: gray;
+  color: white; }
+
+#pink {
+  background: pink;
+  color: white; }

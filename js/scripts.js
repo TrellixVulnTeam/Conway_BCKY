@@ -2,6 +2,7 @@ window.addEventListener("load", function () {
     let boardSize = 1;
     let clickable = []
     let timerReference = undefined
+    let boardStyle = "style4"
 
     function drawBoard(size) {
         let boardContainer = document.createElement("div")
@@ -54,6 +55,7 @@ window.addEventListener("load", function () {
             let cell = document.createElement("div")
             cell.classList.add("cell")
             cell.classList.add("dead")
+            cell.classList.add(boardStyle)
             cell = getCellCoord(BoardUnitIndex, cellContainerIndex, cellRowIndex, i, cell)
             cellContainer.append(cell)
             newCellRow.append(cellContainer)
@@ -116,8 +118,13 @@ window.addEventListener("load", function () {
             timerReference = setInterval(run, 500)
         }
         clickable.forEach((element, index) => {
-            element.style.pointerEvents = "none"
+            if (element.classList.contains("btn")) {
+                element.style.display = "none";
+            } else {
+                element.style.pointerEvents = "none"
+            }
         })
+        $("#stop").show()
 
         let cells = document.querySelectorAll(".cell")
         cells.forEach(checkNeighbors)
@@ -130,6 +137,7 @@ window.addEventListener("load", function () {
         clickable.push(document.querySelector("#beauty"))
         clickable.push(document.querySelector("#random"))
         clickable.push(document.querySelector("#sizeButton"))
+        clickable.push(document.querySelector("#colorButton"))
         clickable.push(document.querySelector("#boardContainer"))
     }
 
@@ -174,13 +182,14 @@ window.addEventListener("load", function () {
             cell.classList.remove("dead")
             cell.classList.remove("born")
             cell.classList.add("alive")
-
         }
     }
 
     $("#stop").click(() => {
+        $("#stop").hide()
         clickable.forEach((element, index) => {
             element.style.pointerEvents = "all"
+            element.style.display = "block"
         })
         clearInterval(timerReference)
         timerReference = undefined
@@ -233,8 +242,8 @@ window.addEventListener("load", function () {
 
     function clearBoard() {
         cells = document.querySelectorAll(".cell")
-        cells.forEach((cell,index) =>{
-            if (cell.classList.contains("alive")){
+        cells.forEach((cell, index) => {
+            if (cell.classList.contains("alive")) {
                 cell.classList.remove("alive")
                 cell.classList.add("dead")
             }
@@ -244,6 +253,32 @@ window.addEventListener("load", function () {
     $("#clear").click(() => {
         clearBoard()
     })
+
+    $("#om").click(() => {
+        boardStyle = "style1"
+        changeColor("#92ddc4")
+    })
+
+    $("#ct").click(() => {
+        boardStyle = "style2"
+        changeColor("tan")
+    })
+
+    $("#ic").click(() => {
+        boardStyle = "style3"
+        changeColor("#582704")
+    })
+    $("#gp").click(() => {
+        boardStyle = "style4"
+        changeColor("pink")
+    })
+
+    function changeColor(color) {
+        $("footer").css("background", color)
+        $(".jumbotron").css("background", color)
+        $(".cell").removeClass("style*")
+        $(".cell").addClass(boardStyle)
+    }
 
     drawBoard(1)
     collectClickables()
