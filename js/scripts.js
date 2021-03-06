@@ -70,7 +70,6 @@ window.addEventListener("load", function () {
         newCell.setAttribute("coordx", cellCoordX)
         newCell.setAttribute("coordy", cellCoordY)
         return newCell
-
     }
 
     function addCellListener() {
@@ -84,30 +83,6 @@ window.addEventListener("load", function () {
             }
         })
     }
-
-    $("#board1").click(function () {
-        $("#board").empty()
-        drawBoard(1)
-        boardSize = 1
-    })
-
-    $("#board2").click(function () {
-        $("#board").empty()
-        drawBoard(2)
-        boardSize = 2
-    })
-
-    $("#board3").click(function () {
-        $("#board").empty()
-        drawBoard(3)
-        boardSize = 3
-    })
-
-    $("#board4").click(function () {
-        $("#board").empty()
-        drawBoard(4)
-        boardSize = 4
-    })
 
     $("#run").click(() => {
         run()
@@ -129,7 +104,6 @@ window.addEventListener("load", function () {
         let cells = document.querySelectorAll(".cell")
         cells.forEach(checkNeighbors)
         cells.forEach(stateColor)
-
     }
 
     function collectClickables() {
@@ -195,6 +169,26 @@ window.addEventListener("load", function () {
         timerReference = undefined
     })
 
+    $("#beauty").click(() => {
+        clearBoard()
+
+        let aliveCells = []
+        let i = 5
+        let j = 5
+
+        for (let k = 0; k < boardSize; k++) {
+            for (let m = 0; m < boardSize; m++) {
+                aliveCells.push(document.querySelector(`[coordx="${i + m * 12}"][coordy="${j + k * 12}"]`))
+                aliveCells.push(document.querySelector(`[coordx="${i - 1 + m * 12}"][coordy="${j + 1 + k * 12}"]`))
+                aliveCells.push(document.querySelector(`[coordx="${i + m * 12}"][coordy="${j + 1 + k * 12}"]`))
+                aliveCells.push(document.querySelector(`[coordx="${i + 1 + m * 12}"][coordy="${j + 1 + k * 12}"]`))
+            }
+        }
+        born(aliveCells)
+        run()
+
+    })
+
     $("#random").click(() => {
         clearBoard()
 
@@ -220,26 +214,6 @@ window.addEventListener("load", function () {
         })
     }
 
-    $("#beauty").click(() => {
-        clearBoard()
-
-        let aliveCells = []
-        let i = 5
-        let j = 5
-
-        for (let k = 0; k < boardSize; k++) {
-            for (let m = 0; m < boardSize; m++) {
-                aliveCells.push(document.querySelector(`[coordx="${i + m * 12}"][coordy="${j + k * 12}"]`))
-                aliveCells.push(document.querySelector(`[coordx="${i - 1 + m * 12}"][coordy="${j + 1 + k * 12}"]`))
-                aliveCells.push(document.querySelector(`[coordx="${i + m * 12}"][coordy="${j + 1 + k * 12}"]`))
-                aliveCells.push(document.querySelector(`[coordx="${i + 1 + m * 12}"][coordy="${j + 1 + k * 12}"]`))
-            }
-        }
-        born(aliveCells)
-        run()
-
-    })
-
     function clearBoard() {
         cells = document.querySelectorAll(".cell")
         cells.forEach((cell, index) => {
@@ -250,8 +224,28 @@ window.addEventListener("load", function () {
         })
     }
 
-    $("#clear").click(() => {
-        clearBoard()
+    $("#board1").click(function () {
+        $("#board").empty()
+        drawBoard(1)
+        boardSize = 1
+    })
+
+    $("#board2").click(function () {
+        $("#board").empty()
+        drawBoard(2)
+        boardSize = 2
+    })
+
+    $("#board3").click(function () {
+        $("#board").empty()
+        drawBoard(3)
+        boardSize = 3
+    })
+
+    $("#board4").click(function () {
+        $("#board").empty()
+        drawBoard(4)
+        boardSize = 4
     })
 
     $("#om").click(() => {
