@@ -3,10 +3,14 @@
   width: 60%;
   padding: 10px; }
 
+.cellContainer {
+  padding: 1px; }
+
 .cell {
   width: 100%;
   background: gray;
-  border-radius: 20%; }
+  border-radius: 20%;
+  padding: 1px; }
 
 .alive {
   background: pink; }

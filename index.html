@@ -99,13 +99,16 @@
             function drawCellRow(BoardUnitIndex, cellContainerIndex, cellRowIndex, cellRow) {
                 let newCellRow = cellRow
                 for (let i = 0; i < 12; i++) {
+                    let cellContainer = document.createElement("div")
+                    cellContainer.classList.add("cellContainer")
+
+                    cellContainer.classList.add("col-1")
                     let cell = document.createElement("div")
                     cell.classList.add("cell")
-                    cell.classList.add("col-1")
-                    cell.classList.add("p-0")
                     cell.classList.add("dead")
                     cell = getCellCoord(BoardUnitIndex, cellContainerIndex, cellRowIndex, i, cell)
-                    newCellRow.append(cell)
+                    cellContainer.append(cell)
+                    newCellRow.append(cellContainer)
                 }
                 return newCellRow
             }
@@ -157,12 +160,12 @@
             })
 
             $("#run").click(() => {
-               run()
+                run()
             })
 
             function run() {
                 if (timerReference === undefined) {
-                    timerReference = setInterval(run, 200)
+                    timerReference = setInterval(run, 500)
                 }
                 clickable.forEach((element, index) => {
                     element.style.pointerEvents = "none"
@@ -239,24 +242,16 @@
             $("#random").click(() => {
                 clearboard()
 
-                let alivecells = []
+                let aliveCells = []
                 for (let i = 0; i < boardSize * 48; i++) {
                     let j = getRandomInt()
                     let k = getRandomInt()
-                    alivecells.push(document.querySelector(`[coordx="${j}"][coordy="${k}"]`))
+                    aliveCells.push(document.querySelector(`[coordx="${j}"][coordy="${k}"]`))
                 }
 
-                alivecells.forEach((cell, index) => {
-                    cell.classList.remove("dead")
-                    cell.classList.add("alive")
-                })
-
+                born(aliveCells)
                 run()
             })
-
-            function getRandomInt() {
-                return Math.floor(Math.random() * boardSize * 12)
-            }
 
             function clearboard() {
                 $(".cell").ready(() => {
@@ -266,6 +261,37 @@
                     }
                 })
             }
+
+            function getRandomInt() {
+                return Math.floor(Math.random() * boardSize * 12)
+            }
+
+            function born(aliveCells) {
+                aliveCells.forEach((cell, index) => {
+                    cell.classList.remove("dead")
+                    cell.classList.add("alive")
+                })
+            }
+
+            $("#beauty").click(() => {
+                clearboard()
+
+                let aliveCells = []
+                let i = 5
+                let j = 5
+
+                for (let k = 0; k < boardSize; k++) {
+                    for (let m = 0; m < boardSize; m++) {
+                        aliveCells.push(document.querySelector(`[coordx="${i + m * 12}"][coordy="${j + k * 12}"]`))
+                        aliveCells.push(document.querySelector(`[coordx="${i - 1 + m * 12}"][coordy="${j + 1 + k * 12}"]`))
+                        aliveCells.push(document.querySelector(`[coordx="${i + m * 12}"][coordy="${j + 1 + k * 12}"]`))
+                        aliveCells.push(document.querySelector(`[coordx="${i + 1 + m * 12}"][coordy="${j + 1 + k * 12}"]`))
+                    }
+                }
+                born(aliveCells)
+                run()
+
+            })
 
             drawBoard(1)
             collectClickables()
