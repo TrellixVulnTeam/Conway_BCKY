@@ -1,12 +1,18 @@
 #board {
-  background-color: #cfccc4;
+  background: #cfccc4;
   width: 60%;
   padding: 10px; }
 
 .cell {
   width: 100%;
-  background-color: gray;
+  background: gray;
   border-radius: 20%; }
+
+.alive {
+  background: pink; }
+
+.dead {
+  background: gray; }
 
 .cell:after {
   content: "";

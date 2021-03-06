@@ -123,11 +123,9 @@
                     if ($(this).hasClass("dead")) {
                         $(this).removeClass("dead")
                         $(this).addClass("alive")
-                        $(this).css("background-color", "pink")
                     } else if ($(this).hasClass("alive")) {
                         $(this).removeClass("alive")
                         $(this).addClass("dead")
-                        $(this).css("background-color", "gray")
                     }
                 })
             }
@@ -158,7 +156,7 @@
 
             $("#run").click(() => {
                 if (timerReference === undefined) {
-                    timerReference = setInterval(run, 5000)
+                    timerReference = setInterval(run, 100)
                 }
             })
 
@@ -175,33 +173,41 @@
 
                 for (i = Math.max(x - 1, 0); i < Math.min(x + 2, boardSize * 12); i++) {
                     for (j = Math.max(y - 1, 0); j < Math.min(y + 2, boardSize * 12); j++) {
-                        console.log(i)
-                        console.log(j)
-                        console.log(document.querySelector('[coordx="i"][coordy="j"]').classList)
-                        if (document.querySelector('[coordx="i"][coordy="j"]').classList.contains("alive")
-                            && i != x && j != y) {
+                        if (document.querySelector(`[coordx="${i}"][coordy="${j}"]`).classList.contains("alive")
+                            && !(i === x && j === y)) {
                             aliveNeighborNum++
-                            if (x == 0 && y == 0) {
-                                console.log(`alive neighbors: ${aliveNeighborNum}`)
-                            }
                         }
                     }
                 }
 
-                if ((aliveNeighborNum == 2 || aliveNeighborNum == 3) && cell.classList.contains("dead")) {
-                    cell.classList.remove("dead")
-                    cell.classList.add("alive")
-                } else if ((aliveNeighborNum != 2 && aliveNeighborNum != 3) && cell.classList.contains("alive")) {
-                    cell.classList.remove("alive")
-                    cell.classList.add("dead")
+                if (aliveNeighborNum < 2 || aliveNeighborNum > 3) {
+                    cell.classList.add("die")
+                } else if (aliveNeighborNum === 3) {
+                    cell.classList.add("born")
+                } else {
+                    if (cell.classList.contains("alive")) {
+                        cell.classList.add("born")
+                    } else if (cell.classList.contains("dead")) {
+                        cell.classList.add("die")
+                    }
                 }
+                console.log(cell.classList)
             }
 
             function stateColor(cell, index) {
-                if (cell.classList.contains("dead")) {
-                    cell.style.backgroundColor = "gray"
-                } else if (cell.classList.contains("alive")) {
-                    cell.style.backgroundColor = "pink"
+                if (cell.classList.contains("dead") && cell.classList.contains("die")) {
+                    cell.classList.remove("die")
+                } else if (cell.classList.contains("alive") && cell.classList.contains("die")) {
+                    cell.classList.remove("die")
+                    cell.classList.remove("alive")
+                    cell.classList.add("dead")
+                } else if (cell.classList.contains("alive") && cell.classList.contains("born")) {
+                    cell.classList.remove("born")
+                } else if (cell.classList.contains("dead") && cell.classList.contains("born")) {
+                    cell.classList.remove("dead")
+                    cell.classList.remove("born")
+                    cell.classList.add("alive")
+
                 }
             }
 

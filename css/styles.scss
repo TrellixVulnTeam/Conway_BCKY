@@ -6,17 +6,24 @@ $board-bg: rgb(207, 204, 196);
 }
 
 #board {
-    background-color: $board-bg;
+    background: $board-bg;
     width: 60%;
     padding:10px;
 }
 
 .cell {
     width: 100%;
-    background-color: gray;
+    background: gray;
     border-radius: 20%;
 }
 
+.alive {
+    background: pink;
+}
+
+.dead {
+    background: gray;
+}
 .cell:after {
     content: "";
     display: block;
