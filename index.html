@@ -157,12 +157,13 @@
             })
 
             $("#run").click(() => {
-                if (timerReference === undefined) {
-                    timerReference = setInterval(run, 200)
-                }
+               run()
             })
 
             function run() {
+                if (timerReference === undefined) {
+                    timerReference = setInterval(run, 200)
+                }
                 clickable.forEach((element, index) => {
                     element.style.pointerEvents = "none"
                 })
@@ -173,7 +174,7 @@
 
             }
 
-            function addClickables() {
+            function collectClickables() {
                 clickable.push(document.querySelector("#run"))
                 clickable.push(document.querySelector("#beauty"))
                 clickable.push(document.querySelector("#random"))
@@ -235,8 +236,39 @@
                 timerReference = undefined
             })
 
+            $("#random").click(() => {
+                clearboard()
+
+                let alivecells = []
+                for (let i = 0; i < boardSize * 48; i++) {
+                    let j = getRandomInt()
+                    let k = getRandomInt()
+                    alivecells.push(document.querySelector(`[coordx="${j}"][coordy="${k}"]`))
+                }
+
+                alivecells.forEach((cell, index) => {
+                    cell.classList.remove("dead")
+                    cell.classList.add("alive")
+                })
+
+                run()
+            })
+
+            function getRandomInt() {
+                return Math.floor(Math.random() * boardSize * 12)
+            }
+
+            function clearboard() {
+                $(".cell").ready(() => {
+                    if ($(this).hasClass("alive")) {
+                        $(this).removeClass("alive")
+                        $(this).addClass("dead")
+                    }
+                })
+            }
+
             drawBoard(1)
-            addClickables()
+            collectClickables()
         })
     </script>
 
