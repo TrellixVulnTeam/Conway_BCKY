@@ -1,3 +1,7 @@
+.jumbotron {
+  background: black;
+  color: white; }
+
 #board {
   background: #cfccc4;
   width: 60%;
@@ -8,15 +12,13 @@
 
 .cell {
   width: 100%;
-  background: gray;
-  border-radius: 20%;
   padding: 1px; }
 
 .alive {
-  background: pink; }
+  background: black; }
 
 .dead {
-  background: gray; }
+  background: white; }
 
 .cell:after {
   content: "";
