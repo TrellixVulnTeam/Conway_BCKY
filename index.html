@@ -36,10 +36,10 @@
                     Reset Board
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <a class="dropdown-item" id="board1"><span style="font-size:20px">12*12</span></a>
-                    <a class="dropdown-item" id="board2"><span style="font-size:25px">24*24</span></a>
-                    <a class="dropdown-item" id="board3"><span style="font-size:30px">36*36</span></a>
-                    <a class="dropdown-item" id="board4"><span style="font-size:35px">48*48</span></a>
+                    <a class="dropdown-item" href="#" id="board1"><span style="font-size:20px">12*12</span></a>
+                    <a class="dropdown-item" href="#" id="board2"><span style="font-size:25px">24*24</span></a>
+                    <a class="dropdown-item" href="#" id="board3"><span style="font-size:30px">36*36</span></a>
+                    <a class="dropdown-item" href="#" id="board4"><span style="font-size:35px">48*48</span></a>
                 </div>
             </div>
         </div>
@@ -50,7 +50,7 @@
     <script src="node_modules/popper.js/dist/umd/popper.min.js"></script>
     <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
     <script>
-        window.addEventListener("load", () => {
+        window.addEventListener("load", function () {
             let boardSize = 1;
             let clickable = []
             let timerReference = undefined
@@ -117,10 +117,11 @@
                 newCell.setAttribute("coordx", cellCoordX)
                 newCell.setAttribute("coordy", cellCoordY)
                 return newCell
+
             }
 
             function addCellListener() {
-                $(".cell").click(() => {
+                $(".cell").click(function () {
                     if ($(this).hasClass("dead")) {
                         $(this).removeClass("dead")
                         $(this).addClass("alive")
@@ -131,39 +132,37 @@
                 })
             }
 
-            $("#board1").click(() => {
+            $("#board1").click(function () {
                 $("#board").empty()
                 drawBoard(1)
                 boardSize = 1
             })
 
-            $("#board2").click(() => {
+            $("#board2").click(function () {
                 $("#board").empty()
                 drawBoard(2)
                 boardSize = 2
             })
 
-            $("#board3").click(() => {
+            $("#board3").click(function () {
                 $("#board").empty()
                 drawBoard(3)
                 boardSize = 3
             })
 
-            $("#board4").click(() => {
+            $("#board4").click(function () {
                 $("#board").empty()
                 drawBoard(4)
                 boardSize = 4
             })
 
             $("#run").click(() => {
-                run()
-            })
-
-            function run() {
                 if (timerReference === undefined) {
                     timerReference = setInterval(run, 200)
                 }
+            })
 
+            function run() {
                 clickable.forEach((element, index) => {
                     element.style.pointerEvents = "none"
                 })
@@ -208,6 +207,7 @@
                         cell.classList.add("die")
                     }
                 }
+                console.log(cell.classList)
             }
 
             function stateColor(cell, index) {
@@ -215,12 +215,14 @@
                     cell.classList.remove("die")
                 } else if (cell.classList.contains("alive") && cell.classList.contains("die")) {
                     cell.classList.remove("die")
-                    die(cell)
+                    cell.classList.remove("alive")
+                    cell.classList.add("dead")
                 } else if (cell.classList.contains("alive") && cell.classList.contains("born")) {
                     cell.classList.remove("born")
                 } else if (cell.classList.contains("dead") && cell.classList.contains("born")) {
+                    cell.classList.remove("dead")
                     cell.classList.remove("born")
-                    born(cell)
+                    cell.classList.add("alive")
 
                 }
             }
@@ -232,47 +234,6 @@
                 clearInterval(timerReference)
                 timerReference = undefined
             })
-
-            $("#random").click(() => {
-                clearboard()
-
-                let alivecells = []
-                for (let i = 0; i < boardSize * 48; i++) {
-                    let j = getRandomInt()
-                    let k = getRandomInt()
-                    alivecells.push(document.querySelector(`[coordx="${j}"][coordy="${k}"]`))
-                }
-
-                alivecells.forEach((cell, index) => {
-                    cell.classList.remove("dead")
-                    cell.classList.add("alive")
-                })
-
-                run()
-            })
-
-            function getRandomInt() {
-                return Math.floor(Math.random() * boardSize * 12)
-            }
-
-            function born(cell) {
-                cell.classList.remove("dead")
-                cell.classList.add("alive")
-            }
-
-            function die(cell) {
-                cell.classList.remove("alive")
-                cell.classList.add("dead")
-            }
-
-            function clearboard() {
-                $(".cell").ready(() => {
-                    if ($(this).hasClass("alive")) {
-                        $(this).removeClass("alive")
-                        $(this).addClass("dead")
-                    }
-                })
-            }
 
             drawBoard(1)
             addClickables()

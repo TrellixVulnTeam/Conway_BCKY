@@ -1,11 +1,5 @@
 $board-bg: rgb(207, 204, 196);
 
-@mixin box-0 {
-    padding: 0px 0px;
-    margin: 0px 0px;
-    border-width: 0px;
-}
-
 @mixin button-margin {
     margin: 5px;
     padding-bottom: 10px;
@@ -14,27 +8,12 @@ $board-bg: rgb(207, 204, 196);
 #board {
     background: $board-bg;
     width: 60%;
-    padding: 10px;
-
-    #boardContainer {
-        @include box-0;
-        .row {
-            @include box-0;
-            .container {
-                @include box-0;
-                .row {
-                    @include box-0;
-                    .cell {
-                        @include box-0;
-                    }
-                }
-            }
-        }
-    }
+    padding:10px;
 }
 
 .cell {
     width: 100%;
+    background: gray;
     border-radius: 20%;
 }
 
@@ -58,3 +37,5 @@ $board-bg: rgb(207, 204, 196);
 .dropdown {
     @include button-margin;
 }
+
+
