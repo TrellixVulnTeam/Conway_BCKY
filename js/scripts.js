@@ -266,7 +266,7 @@ window.addEventListener("load", function () {
 
     $("#ic").click(() => {
         boardStyle = "style3"
-        changeColor("#582704")
+        changeColor("rgb(185, 185, 230)")
     })
     $("#gp").click(() => {
         boardStyle = "style4"
@@ -274,12 +274,15 @@ window.addEventListener("load", function () {
     })
 
     function changeColor(color) {
+        console.log
         $("footer").css("background", color)
         $(".jumbotron").css("background", color)
-        $(".cell").removeClass("style*")
+        $(".cell").removeClass((index, className) => {
+            return (className.match (/(^|\s)style\S+/g) || []).join(' ')
+        })
         $(".cell").addClass(boardStyle)
     }
 
-    drawBoard(1)
+    drawBoard(boardSize)
     collectClickables()
 })
