@@ -4,14 +4,14 @@ window.addEventListener("load", function () {
     let timerReference = undefined
     let boardStyle = "style4"
 
-    function drawBoard(size) {
+    function drawBoard() {
         let boardContainer = document.createElement("div")
         boardContainer.classList.add("container")
         boardContainer.setAttribute('id', 'boardContainer')
-        for (let i = 0; i < size; i++) {
+        for (let i = 0; i < boardSize; i++) {
             let boardUnit = document.createElement("div")
             boardUnit.classList.add("row")
-            boardUnit = drawBoardUnit(boardUnit, size, i)
+            boardUnit = drawBoardUnit(boardUnit, i)
             boardContainer.append(boardUnit)
         }
         $("#board").append(boardContainer)
@@ -19,7 +19,7 @@ window.addEventListener("load", function () {
     }
 
     /* A boardUnit contains a row of cellContainers. */
-    function drawBoardUnit(boardUnit, boardSize, boardUnitIndex) {
+    function drawBoardUnit(boardUnit, boardUnitIndex) {
 
         let newBoardUnit = boardUnit
         for (let i = 0; i < boardSize; i++) {
@@ -121,8 +121,8 @@ window.addEventListener("load", function () {
         let x = Number(cell.getAttribute("coordx"))
         let y = Number(cell.getAttribute("coordy"))
 
-        for (i = Math.max(x - 1, 0); i < Math.min(x + 2, boardSize * 12); i++) {
-            for (j = Math.max(y - 1, 0); j < Math.min(y + 2, boardSize * 12); j++) {
+        for (let i = Math.max(x - 1, 0); i < Math.min(x + 2, boardSize * 12); i++) {
+            for (let j = Math.max(y - 1, 0); j < Math.min(y + 2, boardSize * 12); j++) {
                 if (document.querySelector(`[coordx="${i}"][coordy="${j}"]`).classList.contains("alive")
                     && !(i === x && j === y)) {
                     aliveNeighborNum++
@@ -215,7 +215,7 @@ window.addEventListener("load", function () {
     }
 
     function clearBoard() {
-        cells = document.querySelectorAll(".cell")
+        let cells = document.querySelectorAll(".cell")
         cells.forEach((cell, index) => {
             if (cell.classList.contains("alive")) {
                 cell.classList.remove("alive")
@@ -226,26 +226,26 @@ window.addEventListener("load", function () {
 
     $("#board1").click(function () {
         $("#board").empty()
-        drawBoard(1)
         boardSize = 1
+        drawBoard()
     })
 
     $("#board2").click(function () {
         $("#board").empty()
-        drawBoard(2)
         boardSize = 2
+        drawBoard()
     })
 
     $("#board3").click(function () {
         $("#board").empty()
-        drawBoard(3)
         boardSize = 3
+        drawBoard()
     })
 
     $("#board4").click(function () {
         $("#board").empty()
-        drawBoard(4)
         boardSize = 4
+        drawBoard()
     })
 
     $("#om").click(() => {
