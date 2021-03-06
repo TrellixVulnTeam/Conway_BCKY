@@ -20,8 +20,10 @@
             <div class="row">
                 <div class="col-12 col-sm-8">
                     <h1>Conway's Game of Life</h1>
-                    <h6>The Game of Life, also known simply as Life, is a cellular automaton devised by the British
+                    <h6 class="d-none d-sm-block">The Game of Life, also known simply as Life, is a cellular automaton devised by the British
                         mathematician John Horton Conway in 1970.</h6>
+                    <p><a href="https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life" style="color:gray">More details
+                            at Wikipedia</a></p>
                 </div>
             </div>
     </header>
@@ -36,7 +38,7 @@
             </div>
             <div class="btn-group mb-auto" role="group">
                 <button class="btn btn-warning text-white" id="beauty">Something Beautiful</button>
-                <button class="btn btn-success" id="random">Something Random</button>
+                <button class="btn btn-success" id="random">Random</button>
 
             </div>
             <div class="dropdown">
@@ -92,7 +94,22 @@
                 </div>
             </div>
         </div>
-        <div class="row row-content" id="board"></div>
+        <div class="row row-content">
+            <div class="col-12 col-md-7" id="board"></div>
+            <div class="col-12 col-md-5 align-self-center d-none d-lg-block" id="rules">
+                <h5><stong>Rules</stong></h5>
+                <p>Click the board to set live cell and run <span class="fa fa-play fa-xs"></span>.</p>
+                <p>Click "Something Beatutiful" or "Random" to explore interesting patterns.</p>
+                <br>
+                <p><strong>At each step in time, the following transitions occur:</strong></p>
+                <p>1. Any live cell with fewer than two live neighbours dies, as if by underpopulation.</p>
+                <p>2. Any live cell with two or three live neighbours lives on to the next generation.</p>
+                <p>3. Any live cell with more than three live neighbours dies, as if by overpopulation.</p>
+                <p>4. Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.</p>
+                <p><a href="https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life" style="color:gray">More details
+                    at Wikipedia</a></p>
+            </div>
+        </div>
     </div>
 
     <footer>
