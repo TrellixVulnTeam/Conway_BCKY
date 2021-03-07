@@ -14,8 +14,14 @@ More details at Wikipedia: https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life
 
 -- Explore random patterns with button "Something beautiful". 
 
--- Set your own board size from boards with 12*12, 24*24, 36*36, 48*48 cells.
+-- Set your own board size from boards with 12X12, 24X24, 36X36, 48X48 cells.
 
 -- Choose your own web style with different colors.
 
-#### Enjoy it!
+## Enjoy it!
+
+https://qhe231.github.io/ConwayGameOfLife/
+
+## Potential Optimization
+
+The speed of the game in larger boards can be optimized by creating two two-dimentional arrays to store the current and next status of each cell rather than access them to check each time. May optimize it in the future.
