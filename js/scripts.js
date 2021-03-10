@@ -161,11 +161,11 @@ window.addEventListener("load", function () {
         for (let i = 0; i < boardSize * 12; i++) {
             for (let j = 0; j < boardSize * 12; j++) {
                 if (currentStatus[i][j] === "dead" && nextStatus[i][j] === "alive") {
-                    cell = document.querySelector(`[coordx="${i}"][coordy="${j}"]`)
+                    let cell = document.querySelector(`[coordx="${i}"][coordy="${j}"]`)
                     cell.classList.remove("dead")
                     cell.classList.add("alive")
                 } else if (currentStatus[i][j] === "alive" && nextStatus[i][j] === "dead") {
-                    cell = document.querySelector(`[coordx="${i}"][coordy="${j}"]`)
+                    let cell = document.querySelector(`[coordx="${i}"][coordy="${j}"]`)
                     cell.classList.remove("alive")
                     cell.classList.add("dead")
                 }
@@ -243,7 +243,7 @@ window.addEventListener("load", function () {
                 if (currentStatus[i][j] === "alive" || nextStatus[i][j] === "alive") {
                     currentStatus[i][j] = "dead"
                     nextStatus[i][j] = "dead"
-                    cell = document.querySelector(`[coordx="${i}"][coordy="${j}"]`)
+                    let cell = document.querySelector(`[coordx="${i}"][coordy="${j}"]`)
                     cell.classList.remove("alive")
                     cell.classList.add("dead")
                 }

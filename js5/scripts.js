@@ -5,6 +5,19 @@ window.addEventListener("load", function () {
     var clickable = [];
     var timerReference = undefined;
     var boardStyle = "style4";
+    var currentStatus = [];
+    var nextStatus = [];
+
+    function stateBoard() {
+        for (var i = 0; i < boardSize * 12; i++) {
+            currentStatus[i] = [];
+            nextStatus[i] = [];
+            for (var j = 0; j < boardSize * 12; j++) {
+                currentStatus[i][j] = "dead";
+                nextStatus[i][j] = "dead";
+            }
+        }
+    }
 
     function drawBoard() {
         var boardContainer = document.createElement("div");
@@ -18,6 +31,8 @@ window.addEventListener("load", function () {
         }
         $("#board").append(boardContainer);
         addCellListener();
+        console.log(currentStatus);
+        console.log(nextStatus);
     }
 
     /* A boardUnit contains a row of cellContainers. */
@@ -79,9 +94,17 @@ window.addEventListener("load", function () {
             if ($(this).hasClass("dead")) {
                 $(this).removeClass("dead");
                 $(this).addClass("alive");
+                var coordx = Number($(this).attr("coordx"));
+                var coordy = Number($(this).attr("coordy"));
+                currentStatus[coordx][coordy] = "alive";
+                nextStatus[coordx][coordy] = "alive";
             } else if ($(this).hasClass("alive")) {
                 $(this).removeClass("alive");
                 $(this).addClass("dead");
+                var _coordx = $(this).attr("coordx");
+                var _coordy = $(this).attr("coordy");
+                currentStatus[_coordx][_coordy] = "dead";
+                nextStatus[_coordx][_coordy] = "alive";
             }
         });
     }
@@ -103,9 +126,8 @@ window.addEventListener("load", function () {
         });
         $("#stop").show();
 
-        var cells = document.querySelectorAll(".cell");
-        cells.forEach(checkNeighbors);
-        cells.forEach(stateColor);
+        checkNeighbors();
+        stateColor();
     }
 
     function collectClickables() {
@@ -117,45 +139,40 @@ window.addEventListener("load", function () {
         clickable.push(document.querySelector("#boardContainer"));
     }
 
-    function checkNeighbors(cell, index) {
-        var aliveNeighborNum = 0;
-        var x = Number(cell.getAttribute("coordx"));
-        var y = Number(cell.getAttribute("coordy"));
-
-        for (var i = Math.max(x - 1, 0); i < Math.min(x + 2, boardSize * 12); i++) {
-            for (var j = Math.max(y - 1, 0); j < Math.min(y + 2, boardSize * 12); j++) {
-                if (document.querySelector("[coordx=\"" + i + "\"][coordy=\"" + j + "\"]").classList.contains("alive") && !(i === x && j === y)) {
-                    aliveNeighborNum++;
+    function checkNeighbors() {
+        for (var i = 0; i < boardSize * 12; i++) {
+            for (var j = 0; j < boardSize * 12; j++) {
+                var aliveNeighborNum = 0;
+                for (var k = Math.max(i - 1, 0); k < Math.min(i + 2, boardSize * 12); k++) {
+                    for (var m = Math.max(j - 1, 0); m < Math.min(j + 2, boardSize * 12); m++) {
+                        if (currentStatus[k][m] === "alive" && !(i === k && j === m)) {
+                            aliveNeighborNum++;
+                        }
+                    }
                 }
-            }
-        }
-
-        if (aliveNeighborNum < 2 || aliveNeighborNum > 3) {
-            cell.classList.add("die");
-        } else if (aliveNeighborNum === 3) {
-            cell.classList.add("born");
-        } else {
-            if (cell.classList.contains("alive")) {
-                cell.classList.add("born");
-            } else if (cell.classList.contains("dead")) {
-                cell.classList.add("die");
+                if (aliveNeighborNum < 2 || aliveNeighborNum > 3) {
+                    nextStatus[i][j] = "dead";
+                } else if (aliveNeighborNum === 3) {
+                    nextStatus[i][j] = "alive";
+                }
             }
         }
     }
 
-    function stateColor(cell, index) {
-        if (cell.classList.contains("dead") && cell.classList.contains("die")) {
-            cell.classList.remove("die");
-        } else if (cell.classList.contains("alive") && cell.classList.contains("die")) {
-            cell.classList.remove("die");
-            cell.classList.remove("alive");
-            cell.classList.add("dead");
-        } else if (cell.classList.contains("alive") && cell.classList.contains("born")) {
-            cell.classList.remove("born");
-        } else if (cell.classList.contains("dead") && cell.classList.contains("born")) {
-            cell.classList.remove("dead");
-            cell.classList.remove("born");
-            cell.classList.add("alive");
+    function stateColor() {
+        for (var i = 0; i < boardSize * 12; i++) {
+            for (var j = 0; j < boardSize * 12; j++) {
+                if (currentStatus[i][j] === "dead" && nextStatus[i][j] === "alive") {
+                    var cell = document.querySelector("[coordx=\"" + i + "\"][coordy=\"" + j + "\"]");
+                    cell.classList.remove("dead");
+                    cell.classList.add("alive");
+                } else if (currentStatus[i][j] === "alive" && nextStatus[i][j] === "dead") {
+                    var _cell = document.querySelector("[coordx=\"" + i + "\"][coordy=\"" + j + "\"]");
+                    _cell.classList.remove("alive");
+                    _cell.classList.add("dead");
+                }
+                currentStatus[i][j] = nextStatus[i][j];
+            }
         }
     }
 
@@ -173,15 +190,23 @@ window.addEventListener("load", function () {
         clearBoard();
 
         var aliveCells = [];
-        var i = 5;
-        var j = 5;
 
-        for (var k = 0; k < boardSize; k++) {
-            for (var m = 0; m < boardSize; m++) {
-                aliveCells.push(document.querySelector("[coordx=\"" + (i + m * 12) + "\"][coordy=\"" + (j + k * 12) + "\"]"));
-                aliveCells.push(document.querySelector("[coordx=\"" + (i - 1 + m * 12) + "\"][coordy=\"" + (j + 1 + k * 12) + "\"]"));
-                aliveCells.push(document.querySelector("[coordx=\"" + (i + m * 12) + "\"][coordy=\"" + (j + 1 + k * 12) + "\"]"));
-                aliveCells.push(document.querySelector("[coordx=\"" + (i + 1 + m * 12) + "\"][coordy=\"" + (j + 1 + k * 12) + "\"]"));
+        for (var i = 0; i < boardSize; i++) {
+            for (var j = 0; j < boardSize; j++) {
+                currentStatus[5 + i * 12][5 + j * 12] = "alive";
+                currentStatus[4 + i * 12][6 + j * 12] = "alive";
+                currentStatus[5 + i * 12][6 + j * 12] = "alive";
+                currentStatus[6 + i * 12][6 + j * 12] = "alive";
+
+                nextStatus[5 + i * 12][5 + j * 12] = "alive";
+                nextStatus[4 + i * 12][6 + j * 12] = "alive";
+                nextStatus[5 + i * 12][6 + j * 12] = "alive";
+                nextStatus[6 + i * 12][6 + j * 12] = "alive";
+
+                aliveCells.push(document.querySelector("[coordx=\"" + (5 + i * 12) + "\"][coordy=\"" + (5 + j * 12) + "\"]"));
+                aliveCells.push(document.querySelector("[coordx=\"" + (4 + i * 12) + "\"][coordy=\"" + (6 + j * 12) + "\"]"));
+                aliveCells.push(document.querySelector("[coordx=\"" + (5 + i * 12) + "\"][coordy=\"" + (6 + j * 12) + "\"]"));
+                aliveCells.push(document.querySelector("[coordx=\"" + (6 + i * 12) + "\"][coordy=\"" + (6 + j * 12) + "\"]"));
             }
         }
         born(aliveCells);
@@ -196,8 +221,9 @@ window.addEventListener("load", function () {
             var j = getRandomInt();
             var k = getRandomInt();
             aliveCells.push(document.querySelector("[coordx=\"" + j + "\"][coordy=\"" + k + "\"]"));
+            currentStatus[j][k] = "alive";
+            nextStatus[j][k] = "alive";
         }
-
         born(aliveCells);
         run();
     });
@@ -214,36 +240,44 @@ window.addEventListener("load", function () {
     }
 
     function clearBoard() {
-        var cells = document.querySelectorAll(".cell");
-        cells.forEach(function (cell, index) {
-            if (cell.classList.contains("alive")) {
-                cell.classList.remove("alive");
-                cell.classList.add("dead");
+        for (var i = 0; i < boardSize * 12; i++) {
+            for (var j = 0; j < boardSize * 12; j++) {
+                if (currentStatus[i][j] === "alive" || nextStatus[i][j] === "alive") {
+                    currentStatus[i][j] = "dead";
+                    nextStatus[i][j] = "dead";
+                    var cell = document.querySelector("[coordx=\"" + i + "\"][coordy=\"" + j + "\"]");
+                    cell.classList.remove("alive");
+                    cell.classList.add("dead");
+                }
             }
-        });
+        }
     }
 
     $("#board1").click(function () {
         $("#board").empty();
         boardSize = 1;
+        stateBoard();
         drawBoard();
     });
 
     $("#board2").click(function () {
         $("#board").empty();
         boardSize = 2;
+        stateBoard();
         drawBoard();
     });
 
     $("#board3").click(function () {
         $("#board").empty();
         boardSize = 3;
+        stateBoard();
         drawBoard();
     });
 
     $("#board4").click(function () {
         $("#board").empty();
         boardSize = 4;
+        stateBoard();
         drawBoard();
     });
 
@@ -267,7 +301,6 @@ window.addEventListener("load", function () {
     });
 
     function changeColor(color) {
-        console.log;
         $("footer").css("background", color);
         $(".jumbotron").css("background", color);
         $(".cell").removeClass(function (index, className) {
@@ -276,6 +309,7 @@ window.addEventListener("load", function () {
         $(".cell").addClass(boardStyle);
     }
 
-    drawBoard(boardSize);
+    stateBoard();
+    drawBoard();
     collectClickables();
 });
