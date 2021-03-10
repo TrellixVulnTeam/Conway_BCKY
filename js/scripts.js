@@ -1,8 +1,21 @@
 window.addEventListener("load", function () {
-    let boardSize = 1;
+    let boardSize = 1
     let clickable = []
     let timerReference = undefined
     let boardStyle = "style4"
+    let currentStatus = []
+    let nextStatus = []
+
+    function stateBoard() {
+        for (let i = 0; i < boardSize * 12; i++) {
+            currentStatus[i] = []
+            nextStatus[i] = []
+            for (let j = 0; j < boardSize * 12; j++) {
+                currentStatus[i][j] = "dead"
+                nextStatus[i][j] = "dead"
+            }
+        }
+    }
 
     function drawBoard() {
         let boardContainer = document.createElement("div")
@@ -16,6 +29,8 @@ window.addEventListener("load", function () {
         }
         $("#board").append(boardContainer)
         addCellListener();
+        console.log(currentStatus)
+        console.log(nextStatus)
     }
 
     /* A boardUnit contains a row of cellContainers. */
@@ -77,9 +92,17 @@ window.addEventListener("load", function () {
             if ($(this).hasClass("dead")) {
                 $(this).removeClass("dead")
                 $(this).addClass("alive")
+                let coordx = Number($(this).attr("coordx"))
+                let coordy = Number($(this).attr("coordy"))
+                currentStatus[coordx][coordy] = "alive"
+                nextStatus[coordx][coordy] = "alive"
             } else if ($(this).hasClass("alive")) {
                 $(this).removeClass("alive")
                 $(this).addClass("dead")
+                let coordx = $(this).attr("coordx")
+                let coordy = $(this).attr("coordy")
+                currentStatus[coordx][coordy] = "dead"
+                nextStatus[coordx][coordy] = "alive"
             }
         })
     }
@@ -101,9 +124,8 @@ window.addEventListener("load", function () {
         })
         $("#stop").show()
 
-        let cells = document.querySelectorAll(".cell")
-        cells.forEach(checkNeighbors)
-        cells.forEach(stateColor)
+        checkNeighbors()
+        stateColor()
     }
 
     function collectClickables() {
@@ -115,47 +137,40 @@ window.addEventListener("load", function () {
         clickable.push(document.querySelector("#boardContainer"))
     }
 
-
-    function checkNeighbors(cell, index) {
-        let aliveNeighborNum = 0;
-        let x = Number(cell.getAttribute("coordx"))
-        let y = Number(cell.getAttribute("coordy"))
-
-        for (let i = Math.max(x - 1, 0); i < Math.min(x + 2, boardSize * 12); i++) {
-            for (let j = Math.max(y - 1, 0); j < Math.min(y + 2, boardSize * 12); j++) {
-                if (document.querySelector(`[coordx="${i}"][coordy="${j}"]`).classList.contains("alive")
-                    && !(i === x && j === y)) {
-                    aliveNeighborNum++
+    function checkNeighbors() {
+        for (let i = 0; i < boardSize * 12; i++) {
+            for (let j = 0; j < boardSize * 12; j++) {
+                let aliveNeighborNum = 0;
+                for (let k = Math.max(i - 1, 0); k < Math.min(i + 2, boardSize * 12); k++) {
+                    for (let m = Math.max(j - 1, 0); m < Math.min(j + 2, boardSize * 12); m++) {
+                        if (currentStatus[k][m] === "alive" && !(i === k && j === m)) {
+                            aliveNeighborNum++
+                        }
+                    }
                 }
-            }
-        }
-
-        if (aliveNeighborNum < 2 || aliveNeighborNum > 3) {
-            cell.classList.add("die")
-        } else if (aliveNeighborNum === 3) {
-            cell.classList.add("born")
-        } else {
-            if (cell.classList.contains("alive")) {
-                cell.classList.add("born")
-            } else if (cell.classList.contains("dead")) {
-                cell.classList.add("die")
+                if (aliveNeighborNum < 2 || aliveNeighborNum > 3) {
+                    nextStatus[i][j] = "dead"
+                } else if (aliveNeighborNum === 3) {
+                    nextStatus[i][j] = "alive"
+                }
             }
         }
     }
 
-    function stateColor(cell, index) {
-        if (cell.classList.contains("dead") && cell.classList.contains("die")) {
-            cell.classList.remove("die")
-        } else if (cell.classList.contains("alive") && cell.classList.contains("die")) {
-            cell.classList.remove("die")
-            cell.classList.remove("alive")
-            cell.classList.add("dead")
-        } else if (cell.classList.contains("alive") && cell.classList.contains("born")) {
-            cell.classList.remove("born")
-        } else if (cell.classList.contains("dead") && cell.classList.contains("born")) {
-            cell.classList.remove("dead")
-            cell.classList.remove("born")
-            cell.classList.add("alive")
+    function stateColor() {
+        for (let i = 0; i < boardSize * 12; i++) {
+            for (let j = 0; j < boardSize * 12; j++) {
+                if (currentStatus[i][j] === "dead" && nextStatus[i][j] === "alive") {
+                    cell = document.querySelector(`[coordx="${i}"][coordy="${j}"]`)
+                    cell.classList.remove("dead")
+                    cell.classList.add("alive")
+                } else if (currentStatus[i][j] === "alive" && nextStatus[i][j] === "dead") {
+                    cell = document.querySelector(`[coordx="${i}"][coordy="${j}"]`)
+                    cell.classList.remove("alive")
+                    cell.classList.add("dead")
+                }
+                currentStatus[i][j] = nextStatus[i][j]
+            }
         }
     }
 
@@ -173,20 +188,27 @@ window.addEventListener("load", function () {
         clearBoard()
 
         let aliveCells = []
-        let i = 5
-        let j = 5
 
-        for (let k = 0; k < boardSize; k++) {
-            for (let m = 0; m < boardSize; m++) {
-                aliveCells.push(document.querySelector(`[coordx="${i + m * 12}"][coordy="${j + k * 12}"]`))
-                aliveCells.push(document.querySelector(`[coordx="${i - 1 + m * 12}"][coordy="${j + 1 + k * 12}"]`))
-                aliveCells.push(document.querySelector(`[coordx="${i + m * 12}"][coordy="${j + 1 + k * 12}"]`))
-                aliveCells.push(document.querySelector(`[coordx="${i + 1 + m * 12}"][coordy="${j + 1 + k * 12}"]`))
+        for (let i = 0; i < boardSize; i++) {
+            for (let j = 0; j < boardSize; j++) {
+                currentStatus[5 + i * 12][5 + j * 12] = "alive"
+                currentStatus[4 + i * 12][6 + j * 12] = "alive"
+                currentStatus[5 + i * 12][6 + j * 12] = "alive"
+                currentStatus[6 + i * 12][6 + j * 12] = "alive"
+
+                nextStatus[5 + i * 12][5 + j * 12] = "alive"
+                nextStatus[4 + i * 12][6 + j * 12] = "alive"
+                nextStatus[5 + i * 12][6 + j * 12] = "alive"
+                nextStatus[6 + i * 12][6 + j * 12] = "alive"
+
+                aliveCells.push(document.querySelector(`[coordx="${5 + i * 12}"][coordy="${5 + j * 12}"]`))
+                aliveCells.push(document.querySelector(`[coordx="${4 + i * 12}"][coordy="${6 + j * 12}"]`))
+                aliveCells.push(document.querySelector(`[coordx="${5 + i * 12}"][coordy="${6 + j * 12}"]`))
+                aliveCells.push(document.querySelector(`[coordx="${6 + i * 12}"][coordy="${6 + j * 12}"]`))
             }
         }
         born(aliveCells)
         run()
-
     })
 
     $("#random").click(() => {
@@ -197,8 +219,9 @@ window.addEventListener("load", function () {
             let j = getRandomInt()
             let k = getRandomInt()
             aliveCells.push(document.querySelector(`[coordx="${j}"][coordy="${k}"]`))
+            currentStatus[j][k] = "alive"
+            nextStatus[j][k] = "alive"
         }
-
         born(aliveCells)
         run()
     })
@@ -215,36 +238,44 @@ window.addEventListener("load", function () {
     }
 
     function clearBoard() {
-        let cells = document.querySelectorAll(".cell")
-        cells.forEach((cell, index) => {
-            if (cell.classList.contains("alive")) {
-                cell.classList.remove("alive")
-                cell.classList.add("dead")
+        for (let i = 0; i < boardSize * 12; i++) {
+            for (let j = 0; j < boardSize * 12; j++) {
+                if (currentStatus[i][j] === "alive" || nextStatus[i][j] === "alive") {
+                    currentStatus[i][j] = "dead"
+                    nextStatus[i][j] = "dead"
+                    cell = document.querySelector(`[coordx="${i}"][coordy="${j}"]`)
+                    cell.classList.remove("alive")
+                    cell.classList.add("dead")
+                }
             }
-        })
+        }
     }
 
     $("#board1").click(function () {
         $("#board").empty()
         boardSize = 1
+        stateBoard()
         drawBoard()
     })
 
     $("#board2").click(function () {
         $("#board").empty()
         boardSize = 2
+        stateBoard()
         drawBoard()
     })
 
     $("#board3").click(function () {
         $("#board").empty()
         boardSize = 3
+        stateBoard()
         drawBoard()
     })
 
     $("#board4").click(function () {
         $("#board").empty()
         boardSize = 4
+        stateBoard()
         drawBoard()
     })
 
@@ -268,15 +299,15 @@ window.addEventListener("load", function () {
     })
 
     function changeColor(color) {
-        console.log
         $("footer").css("background", color)
         $(".jumbotron").css("background", color)
         $(".cell").removeClass((index, className) => {
-            return (className.match (/(^|\s)style\S+/g) || []).join(' ')
+            return (className.match(/(^|\s)style\S+/g) || []).join(' ')
         })
         $(".cell").addClass(boardStyle)
     }
 
-    drawBoard(boardSize)
+    stateBoard()
+    drawBoard()
     collectClickables()
 })
